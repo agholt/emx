@@ -1,0 +1,21 @@
+#!/bin/sh
+
+case "$1" in
+        start)
+                echo -n "Bring up network interfaces: "
+                /sbin/ifup -a
+                echo "done."
+                ;;
+        stop)
+                echo -n "Take down network interfaces: "
+                /sbin/ifdown -a
+                echo "done."
+                ;;
+        force-reload|restart)
+                echo -n "Reconfigure network interfaces: "
+                ifdown -a
+                ifup -a
+                echo "done."
+                ;;
+esac
+

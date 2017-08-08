@@ -1,0 +1,40 @@
+#!/bin/sh
+
+UNAME=telnetd
+UTIL=/usr/sbin/${UNAME}
+DESC="Telnet daemon"
+
+if [ ! -x ${UTIL} ]; then
+       echo Skipping ${DESC}.
+       exit 2
+fi
+
+set -e
+
+case "$1" in
+       start)
+               echo -n "Starting ${UNAME}: "
+               ${UTIL}
+               EXIT=$?
+               if [ $EXIT == 0 ]; then
+                       echo "${UNAME} started sucessfully."
+               else
+                       echo "${UNAME} failed."
+               fi
+               ;;
+       stop)
+               echo -n "Stopping ${UNAME}: "
+               if killall ${UNAME}
+               then
+                       echo "${UNAME} stopped sucessfully."
+               else
+                       echo "${UNAME} failed."
+               fi
+               ;;
+       *)
+               echo "usage: $0 {start|stop}"
+               exit 1;
+esac
+
+exit 0
+

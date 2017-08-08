@@ -1,0 +1,32 @@
+#!/bin/sh
+
+PATH=/sbin:/bin/:/usr/sbin:/usr/bin
+runlevel=S
+prevlevel=N
+umask 022
+export PATH runlevel prevlevel
+
+# Read configuration variables
+[ -f /etc/defaults/rcS ] && . /etc/defaults/rcS
+export VERBOSE
+
+trap ":" INT QUIT TSTP
+
+for i in /etc/rcS.d/S??*
+do
+       # Ignore dangling symlinks
+       [ ! -f "$i" ] && continue
+       case "$i" in
+               *.sh)
+                       (
+                               trap - INT QUIT TSTP
+                               set start
+                               . $i
+                       )
+                       ;;
+               *)
+                       $i start
+                       ;;
+       esac
+done
+

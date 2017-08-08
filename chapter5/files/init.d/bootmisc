@@ -1,0 +1,31 @@
+#!/bin/sh
+
+start_up () {
+
+        # Create /var directory
+        tar xf /var.tar
+
+        # Save dmesg output
+        /bin/dmesg >/var/log/dmesg
+
+        # Create FIFO
+        [ ! -p /dev/initctl ] && /usr/bin/mkfifo /dev/initctl
+
+        # Create /var/run/utmp
+        touch /var/run/utmp
+
+}
+
+case "$1" in
+  start|"")
+        start_up
+        ;;
+  stop)
+        # No operation
+        ;;
+  *)
+        echo "Usage: bootmisc [start|stop]" >&2
+        exit 3
+        ;;
+esac
+

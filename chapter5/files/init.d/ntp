@@ -1,0 +1,45 @@
+#!/bin/sh
+
+UNAME=ntpd
+UTIL=/usr/sbin/${UNAME}
+DESC="NTP daemon"
+RTC=/sbin/hwclock
+
+SERVER=0.debian.pool.ntp.org
+
+if [ ! -x ${UTIL} ]; then
+       echo Skipping ${DESC}.
+       ${RTC} -s   # set system clock from RTC
+       exit 2
+fi
+
+set -e
+
+case "$1" in
+       start)
+               echo -n "Starting ${UNAME}: "
+               ${UTIL} -p ${SERVER}
+               EXIT=$?
+               if [ $EXIT == 0 ]; then
+                       echo "${UNAME} started sucessfully."
+               else
+                       echo "${UNAME} failed."
+               fi
+               ;;
+       stop)
+               echo -n "Stopping ${UNAME}: "
+               $RTC -w    # sync RTC with system clock
+               if killall ${UNAME}
+               then
+                       echo "${UNAME} stopped sucessfully."
+               else
+                       echo "${UNAME} failed."
+               fi
+               ;;
+       *)
+               echo "usage: $0 {start|stop}"
+               exit 1;
+esac
+
+exit 0
+

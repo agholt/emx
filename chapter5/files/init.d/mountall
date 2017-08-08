@@ -1,0 +1,15 @@
+#!/bin/sh
+
+case $1 in
+       start|"")
+               /bin/mount -na
+               /bin/mount -n -o remount,rw /
+               ;;
+       stop)
+               /bin/umount -na
+               ;;
+        *)     echo "Usage: mountall [start|stop]" >&2
+               exit 3
+               ;;
+esac
+

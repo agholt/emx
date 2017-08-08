@@ -1,0 +1,26 @@
+#!/bin/sh
+
+for i in /etc/rc${1}.d/K*; do
+       [ ! -f $i ] && continue
+       case "$i" in
+               *.sh)
+                       sh $i stop
+                       ;;
+               *)
+                       $i stop
+                       ;;
+       esac
+done
+
+for i in /etc/rc${1}.d/S*; do
+       [ ! -f $i ] && continue
+       case "$i" in
+               *.sh)
+                       sh $i start
+                       ;;
+               *)
+                       $i start
+                       ;;
+       esac
+done
+
